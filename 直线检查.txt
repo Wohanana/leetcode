@@ -1,0 +1,24 @@
+class Solution {
+    public boolean checkStraightLine(int[][] coordinates) {
+        if(coordinates.length==2){
+            return true;
+        }
+        float k;
+        float b;
+        boolean temp=true;
+        if(coordinates[0][0]-coordinates[1][0]!=0){
+        k=(float)(coordinates[0][1]-coordinates[1][1])/(coordinates[0][0]-coordinates[1][0]);   
+        b=coordinates[0][1]-k*coordinates[0][0];
+        int i=2;
+        while(i<coordinates.length&&Math.abs(coordinates[i][1]-k*coordinates[i][0]-b)<=1.0E-6){
+            i++;
+        }
+        return i==coordinates.length;
+        }else{
+            for(int j=2;j<coordinates.length;j++){
+                if (coordinates[0][0]!=coordinates[j][0])   temp=false;
+            }
+            return temp;
+        }
+    }
+}

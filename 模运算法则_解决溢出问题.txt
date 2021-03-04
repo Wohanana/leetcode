@@ -1,0 +1,19 @@
+模运算法则：
+    (a + b) % p = (a % p + b % p) % p
+    (a - b) % p = (a % p - b % p) % p
+    (a * b) % p = (a % p * b % p) % p
+    (a^b) % p = ((a % p)^b) % p
+
+原题：
+给定由若干0和1组成的数组A。我们定义N_i：从A[0]到A[i]的第i个子数组被解释为一个二进制数（从最高有效位到最低有效位）。
+返回布尔值列表 answer，只有当N_i可以被5整除时，答案 answer[i]为true，否则为false。
+
+解析：
+当数组长度大时，会产生溢出。为避免
+    循环体由
+    temp=temp*2+A[i];
+    sol.add(temp%5==0);
+    改为
+    temp=(temp*2+A[i])%5;
+    sol.add(temp==0);
+    

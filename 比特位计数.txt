@@ -1,0 +1,89 @@
+####题目描述：
+给定一个非负整数 num。对于 0 ≤ i ≤ num 范围中的每个数字 i ，计算其二进制数中的 1 的数目并将它们作为数组返回。
+
+####解析：
+
+#####1.暴力解法
+    两层循环，依次判断二进制数字中1的个数
+    下面是我的代码，使用了Integer.toBinaryString()方法：
+    class Solution {
+        public int[] countBits(int num) {
+            int[] ans=new int[num+1];
+            int temp;
+            for(int i=0;i<num+1;i++){
+                temp=0;
+                String bit_string=Integer.toBinaryString(i);
+                for(int j=0;j<bit_string.length();j++){
+                    if(bit_string.charAt(j)=='1')   temp++;
+                }
+                ans[i]=temp;
+            }
+            return ans;
+        }
+    }
+    下面贴出官方做法：
+    class Solution {
+        public int[] countBits(int num) {
+            int[] bits = new int[num + 1];
+            for (int i = 0; i <= num; i++) {
+                bits[i] = countOnes(i);
+        }
+        return bits;
+    }
+    //这里用到一个性质：求一个二进制数中1的个数，只需要num&=(num-1)，然后记录运算的次数
+    public int countOnes(int x) {
+        int ones = 0;
+            while (x > 0) {
+                x &= (x - 1);
+                ones++;
+            }
+        return ones;
+        }
+    }
+#####2.动态规划
+    昨天刚学习了动态规划，但是看到这道题目完全没有往上面想过。
+    下面的解法均从官方题解搬运
+    （1）“最高有效位”：
+    当numy与numx恰好相差最高位1时，bits[numx]=bits[numy]+1
+    代码如下：
+    class Solution {
+        public int[] countBits(int num) {
+            int[] bits=new int[num+1];
+            int highBit=0;
+            for(int i=1;i<=num;i++){
+                if((i&(i-1))==0){
+                    //记录比i小的最大2的整数幂
+                    highBit=i;
+                }
+                bits[i]=bits[i-highBit]+1;
+            }
+            return bits;
+        }
+    }
+    非常巧妙的状态转移！
+    （2）“最低有效位”
+    将num右移移位相当于num/2,此时bits[num]有两种情况：
+        i.当num为偶数时 bits[num]=bits[num/2]
+        ii.当num为奇数时 bits[num]=bits[num/2]+1
+    代码如下：
+    class Solution {
+        public int[] countBits(int num) {
+            int[] bits=new int[num+1];
+            for(int i=1;i<=num;i++){
+                bits[i]=bits[i>>1]+(i&1);
+            }
+            return bits;
+        }
+    }
+    (3)"最低设置位"
+    设置num的二进制数表示的最低有效位，num&(num-1)运算后最低有效位从1变0；此时有bits[num]=bit[num&(num-1)]+1
+    代码如下：
+        class Solution {
+        public int[] countBits(int num) {
+            int[] bits=new int[num+1];
+            for(int i=1;i<=num;i++){
+                bits[i]=bits[i&(i-1)]+1;
+            }
+            return bits;
+        }
+    }
